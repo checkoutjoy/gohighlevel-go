@@ -234,70 +234,6 @@ err := client.Contacts.RemoveTags("contact-id", []string{"cold-lead"})
 
 **Required Scope:** `contacts.write`
 
-## Data Types
-
-### Contact
-
-```go
-type Contact struct {
-    ID                    string
-    LocationID            string
-    ContactName           string
-    FirstName             string
-    LastName              string
-    Email                 string
-    Phone                 string
-    Type                  string
-    Source                string
-    AssignedTo            string
-    Address1              string
-    City                  string
-    State                 string
-    Country               string
-    PostalCode            string
-    CompanyName           string
-    Website               string
-    Tags                  []string
-    DateOfBirth           string
-    DateAdded             time.Time
-    DateUpdated           time.Time
-    CustomFields          []CustomField
-    BusinessID            string
-    AttributionSource     *AttributionSource
-    AdditionalEmails      []string
-    AdditionalPhones      []string
-    SSN                   string
-    Gender                string
-    Timezone              string
-    DND                   bool
-    DNDSettings           *DNDSettings
-    InboundDNDSettings    *DNDSettings
-    // ... and more
-}
-```
-
-### Custom Fields
-
-```go
-type CustomField struct {
-    ID    string
-    Key   string
-    Value interface{}
-}
-```
-
-### Attribution Source
-
-```go
-type AttributionSource struct {
-    Campaign          string
-    CampaignID        string
-    Medium            string
-    Source            string
-    Referrer          string
-    // ... and more
-}
-```
 
 ## OAuth Scopes
 
@@ -500,10 +436,5 @@ For issues and questions:
 - GitHub Issues: [https://github.com/checkoutjoy/gohighlevel-go/issues](https://github.com/checkoutjoy/gohighlevel-go/issues)
 - GoHighLevel API Support: [https://marketplace.gohighlevel.com/](https://marketplace.gohighlevel.com/)
 
-## About CheckoutJoy
+Built by [CheckoutJoy](https://checkoutjoy.com)
 
-Built by [CheckoutJoy](https://checkoutjoy.com) - We simplify payment solutions and help businesses streamline their operations.
-
----
-
-**Note:** This is an unofficial SDK and is not affiliated with or endorsed by GoHighLevel. GoHighLevel is a trademark of GoHighLevel LLC.
