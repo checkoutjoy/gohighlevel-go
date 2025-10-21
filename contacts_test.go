@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+const (
+	updatedLastName = "Updated"
+)
+
 // Integration tests for Contacts API
 // These tests require valid credentials set via environment variables:
 // - GHL_CLIENT_ID
@@ -168,7 +172,7 @@ func TestContactsIntegration_Update(t *testing.T) {
 
 	// Update the contact
 	updateReq := &UpdateContactRequest{
-		LastName:    "Updated",
+		LastName:    updatedLastName,
 		CompanyName: "Updated Company",
 	}
 
@@ -177,8 +181,8 @@ func TestContactsIntegration_Update(t *testing.T) {
 		t.Fatalf("Failed to update contact: %v", err)
 	}
 
-	if updated.LastName != "Updated" {
-		t.Errorf("Expected last name 'Updated', got %s", updated.LastName)
+	if updated.LastName != updatedLastName {
+		t.Errorf("Expected last name '%s', got %s", updatedLastName, updated.LastName)
 	}
 
 	if updated.CompanyName != "Updated Company" {
@@ -214,7 +218,7 @@ func TestContactsIntegration_Upsert(t *testing.T) {
 	}()
 
 	// Second upsert (update)
-	req.LastName = "Updated"
+	req.LastName = updatedLastName
 	contact2, err := client.Contacts.Upsert(req)
 	if err != nil {
 		t.Fatalf("Failed to upsert contact (update): %v", err)
@@ -225,8 +229,8 @@ func TestContactsIntegration_Upsert(t *testing.T) {
 		t.Errorf("Expected same contact ID, got %s and %s", contact1.ID, contact2.ID)
 	}
 
-	if contact2.LastName != "Updated" {
-		t.Errorf("Expected last name 'Updated', got %s", contact2.LastName)
+	if contact2.LastName != updatedLastName {
+		t.Errorf("Expected last name '%s', got %s", updatedLastName, contact2.LastName)
 	}
 }
 
@@ -403,15 +407,15 @@ func TestContactsIntegration_FullWorkflow(t *testing.T) {
 	// 3. Update the contact
 	t.Log("Step 3: Updating contact")
 	updateReq := &UpdateContactRequest{
-		LastName:    "Updated",
+		LastName:    updatedLastName,
 		CompanyName: "Updated Test Co",
 	}
 	updated, err := client.Contacts.Update(contact.ID, updateReq)
 	if err != nil {
 		t.Fatalf("Failed to update contact: %v", err)
 	}
-	if updated.LastName != "Updated" {
-		t.Errorf("Last name not updated: expected 'Updated', got %s", updated.LastName)
+	if updated.LastName != updatedLastName {
+		t.Errorf("Last name not updated: expected '%s', got %s", updatedLastName, updated.LastName)
 	}
 
 	// 4. Add tags

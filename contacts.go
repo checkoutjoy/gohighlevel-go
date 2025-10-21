@@ -13,42 +13,42 @@ type ContactsService struct {
 
 // Contact represents a GoHighLevel contact
 type Contact struct {
-	ID                    string                 `json:"id,omitempty"`
-	LocationID            string                 `json:"locationId,omitempty"`
-	ContactName           string                 `json:"contactName,omitempty"`
-	FirstName             string                 `json:"firstName,omitempty"`
-	LastName              string                 `json:"lastName,omitempty"`
-	Email                 string                 `json:"email,omitempty"`
-	Phone                 string                 `json:"phone,omitempty"`
-	Type                  string                 `json:"type,omitempty"`
-	Source                string                 `json:"source,omitempty"`
-	AssignedTo            string                 `json:"assignedTo,omitempty"`
-	Address1              string                 `json:"address1,omitempty"`
-	City                  string                 `json:"city,omitempty"`
-	State                 string                 `json:"state,omitempty"`
-	Country               string                 `json:"country,omitempty"`
-	PostalCode            string                 `json:"postalCode,omitempty"`
-	CompanyName           string                 `json:"companyName,omitempty"`
-	Website               string                 `json:"website,omitempty"`
-	Tags                  []string               `json:"tags,omitempty"`
-	DateOfBirth           string                 `json:"dateOfBirth,omitempty"`
-	DateAdded             time.Time              `json:"dateAdded,omitempty"`
-	DateUpdated           time.Time              `json:"dateUpdated,omitempty"`
-	CustomFields          []CustomField          `json:"customField,omitempty"`
-	BusinessID            string                 `json:"businessId,omitempty"`
-	AttributionSource     *AttributionSource     `json:"attributionSource,omitempty"`
-	AdditionalEmails      []string               `json:"additionalEmails,omitempty"`
-	AdditionalPhones      []string               `json:"additionalPhones,omitempty"`
-	SSN                   string                 `json:"ssn,omitempty"`
-	Gender                string                 `json:"gender,omitempty"`
-	Timezone              string                 `json:"timezone,omitempty"`
-	DND                   bool                   `json:"dnd,omitempty"`
-	DNDSettings           *DNDSettings           `json:"dndSettings,omitempty"`
-	InboundDNDSettings    *DNDSettings           `json:"inboundDndSettings,omitempty"`
-	ConversationID        string                 `json:"conversationId,omitempty"`
-	ConversationProvider  string                 `json:"conversationProvider,omitempty"`
-	ConversationAgencyID  string                 `json:"conversationAgencyId,omitempty"`
-	Followers             []string               `json:"followers,omitempty"`
+	ID                   string             `json:"id,omitempty"`
+	LocationID           string             `json:"locationId,omitempty"`
+	ContactName          string             `json:"contactName,omitempty"`
+	FirstName            string             `json:"firstName,omitempty"`
+	LastName             string             `json:"lastName,omitempty"`
+	Email                string             `json:"email,omitempty"`
+	Phone                string             `json:"phone,omitempty"`
+	Type                 string             `json:"type,omitempty"`
+	Source               string             `json:"source,omitempty"`
+	AssignedTo           string             `json:"assignedTo,omitempty"`
+	Address1             string             `json:"address1,omitempty"`
+	City                 string             `json:"city,omitempty"`
+	State                string             `json:"state,omitempty"`
+	Country              string             `json:"country,omitempty"`
+	PostalCode           string             `json:"postalCode,omitempty"`
+	CompanyName          string             `json:"companyName,omitempty"`
+	Website              string             `json:"website,omitempty"`
+	Tags                 []string           `json:"tags,omitempty"`
+	DateOfBirth          string             `json:"dateOfBirth,omitempty"`
+	DateAdded            time.Time          `json:"dateAdded,omitempty"`
+	DateUpdated          time.Time          `json:"dateUpdated,omitempty"`
+	CustomFields         []CustomField      `json:"customField,omitempty"`
+	BusinessID           string             `json:"businessId,omitempty"`
+	AttributionSource    *AttributionSource `json:"attributionSource,omitempty"`
+	AdditionalEmails     []string           `json:"additionalEmails,omitempty"`
+	AdditionalPhones     []string           `json:"additionalPhones,omitempty"`
+	SSN                  string             `json:"ssn,omitempty"`
+	Gender               string             `json:"gender,omitempty"`
+	Timezone             string             `json:"timezone,omitempty"`
+	DND                  bool               `json:"dnd,omitempty"`
+	DNDSettings          *DNDSettings       `json:"dndSettings,omitempty"`
+	InboundDNDSettings   *DNDSettings       `json:"inboundDndSettings,omitempty"`
+	ConversationID       string             `json:"conversationId,omitempty"`
+	ConversationProvider string             `json:"conversationProvider,omitempty"`
+	ConversationAgencyID string             `json:"conversationAgencyId,omitempty"`
+	Followers            []string           `json:"followers,omitempty"`
 }
 
 // CustomField represents a custom field on a contact
@@ -81,12 +81,12 @@ type AttributionSource struct {
 
 // DNDSettings represents do not disturb settings
 type DNDSettings struct {
-	Call *DNDSetting `json:"Call,omitempty"`
-	SMS  *DNDSetting `json:"SMS,omitempty"`
-	Email *DNDSetting `json:"Email,omitempty"`
+	Call     *DNDSetting `json:"Call,omitempty"`
+	SMS      *DNDSetting `json:"SMS,omitempty"`
+	Email    *DNDSetting `json:"Email,omitempty"`
 	WhatsApp *DNDSetting `json:"WhatsApp,omitempty"`
-	GMB  *DNDSetting `json:"GMB,omitempty"`
-	FB   *DNDSetting `json:"FB,omitempty"`
+	GMB      *DNDSetting `json:"GMB,omitempty"`
+	FB       *DNDSetting `json:"FB,omitempty"`
 }
 
 // DNDSetting represents individual DND setting
@@ -98,74 +98,74 @@ type DNDSetting struct {
 
 // CreateContactRequest represents a request to create a contact
 type CreateContactRequest struct {
-	FirstName         string                 `json:"firstName,omitempty"`
-	LastName          string                 `json:"lastName,omitempty"`
-	Name              string                 `json:"name,omitempty"`
-	Email             string                 `json:"email,omitempty"`
-	LocationID        string                 `json:"locationId"`
-	Phone             string                 `json:"phone,omitempty"`
-	Address1          string                 `json:"address1,omitempty"`
-	City              string                 `json:"city,omitempty"`
-	State             string                 `json:"state,omitempty"`
-	PostalCode        string                 `json:"postalCode,omitempty"`
-	Country           string                 `json:"country,omitempty"`
-	CompanyName       string                 `json:"companyName,omitempty"`
-	Website           string                 `json:"website,omitempty"`
-	Source            string                 `json:"source,omitempty"`
-	Tags              []string               `json:"tags,omitempty"`
-	CustomFields      []CustomField          `json:"customField,omitempty"`
-	AttributionSource *AttributionSource     `json:"attributionSource,omitempty"`
+	FirstName         string             `json:"firstName,omitempty"`
+	LastName          string             `json:"lastName,omitempty"`
+	Name              string             `json:"name,omitempty"`
+	Email             string             `json:"email,omitempty"`
+	LocationID        string             `json:"locationId"`
+	Phone             string             `json:"phone,omitempty"`
+	Address1          string             `json:"address1,omitempty"`
+	City              string             `json:"city,omitempty"`
+	State             string             `json:"state,omitempty"`
+	PostalCode        string             `json:"postalCode,omitempty"`
+	Country           string             `json:"country,omitempty"`
+	CompanyName       string             `json:"companyName,omitempty"`
+	Website           string             `json:"website,omitempty"`
+	Source            string             `json:"source,omitempty"`
+	Tags              []string           `json:"tags,omitempty"`
+	CustomFields      []CustomField      `json:"customField,omitempty"`
+	AttributionSource *AttributionSource `json:"attributionSource,omitempty"`
 }
 
 // UpdateContactRequest represents a request to update a contact
 type UpdateContactRequest struct {
-	FirstName         string                 `json:"firstName,omitempty"`
-	LastName          string                 `json:"lastName,omitempty"`
-	Name              string                 `json:"name,omitempty"`
-	Email             string                 `json:"email,omitempty"`
-	Phone             string                 `json:"phone,omitempty"`
-	Address1          string                 `json:"address1,omitempty"`
-	City              string                 `json:"city,omitempty"`
-	State             string                 `json:"state,omitempty"`
-	PostalCode        string                 `json:"postalCode,omitempty"`
-	Country           string                 `json:"country,omitempty"`
-	CompanyName       string                 `json:"companyName,omitempty"`
-	Website           string                 `json:"website,omitempty"`
-	Source            string                 `json:"source,omitempty"`
-	Tags              []string               `json:"tags,omitempty"`
-	CustomFields      []CustomField          `json:"customField,omitempty"`
-	AttributionSource *AttributionSource     `json:"attributionSource,omitempty"`
+	FirstName         string             `json:"firstName,omitempty"`
+	LastName          string             `json:"lastName,omitempty"`
+	Name              string             `json:"name,omitempty"`
+	Email             string             `json:"email,omitempty"`
+	Phone             string             `json:"phone,omitempty"`
+	Address1          string             `json:"address1,omitempty"`
+	City              string             `json:"city,omitempty"`
+	State             string             `json:"state,omitempty"`
+	PostalCode        string             `json:"postalCode,omitempty"`
+	Country           string             `json:"country,omitempty"`
+	CompanyName       string             `json:"companyName,omitempty"`
+	Website           string             `json:"website,omitempty"`
+	Source            string             `json:"source,omitempty"`
+	Tags              []string           `json:"tags,omitempty"`
+	CustomFields      []CustomField      `json:"customField,omitempty"`
+	AttributionSource *AttributionSource `json:"attributionSource,omitempty"`
 }
 
 // UpsertContactRequest represents a request to upsert a contact
 type UpsertContactRequest struct {
-	FirstName         string                 `json:"firstName,omitempty"`
-	LastName          string                 `json:"lastName,omitempty"`
-	Name              string                 `json:"name,omitempty"`
-	Email             string                 `json:"email,omitempty"`
-	LocationID        string                 `json:"locationId"`
-	Phone             string                 `json:"phone,omitempty"`
-	Address1          string                 `json:"address1,omitempty"`
-	City              string                 `json:"city,omitempty"`
-	State             string                 `json:"state,omitempty"`
-	PostalCode        string                 `json:"postalCode,omitempty"`
-	Country           string                 `json:"country,omitempty"`
-	CompanyName       string                 `json:"companyName,omitempty"`
-	Website           string                 `json:"website,omitempty"`
-	Source            string                 `json:"source,omitempty"`
-	Tags              []string               `json:"tags,omitempty"`
-	CustomFields      []CustomField          `json:"customField,omitempty"`
-	AttributionSource *AttributionSource     `json:"attributionSource,omitempty"`
+	FirstName         string             `json:"firstName,omitempty"`
+	LastName          string             `json:"lastName,omitempty"`
+	Name              string             `json:"name,omitempty"`
+	Email             string             `json:"email,omitempty"`
+	LocationID        string             `json:"locationId"`
+	Phone             string             `json:"phone,omitempty"`
+	Address1          string             `json:"address1,omitempty"`
+	City              string             `json:"city,omitempty"`
+	State             string             `json:"state,omitempty"`
+	PostalCode        string             `json:"postalCode,omitempty"`
+	Country           string             `json:"country,omitempty"`
+	CompanyName       string             `json:"companyName,omitempty"`
+	Website           string             `json:"website,omitempty"`
+	Source            string             `json:"source,omitempty"`
+	Tags              []string           `json:"tags,omitempty"`
+	CustomFields      []CustomField      `json:"customField,omitempty"`
+	AttributionSource *AttributionSource `json:"attributionSource,omitempty"`
 }
 
 // GetContactsOptions represents query options for listing contacts
 type GetContactsOptions struct {
-	LocationID string
-	Query      string
-	Limit      int
-	Skip       int
-	StartAfter string
-	StartAfterId string
+	LocationID   string
+	Query        string
+	Limit        int
+	Skip         int
+	StartAfter   string
+	StartAfterID string
 }
 
 // ContactResponse represents a single contact API response
@@ -278,8 +278,8 @@ func (s *ContactsService) List(opts *GetContactsOptions) (*ContactsResponse, err
 	if opts.StartAfter != "" {
 		query.Set("startAfter", opts.StartAfter)
 	}
-	if opts.StartAfterId != "" {
-		query.Set("startAfterId", opts.StartAfterId)
+	if opts.StartAfterID != "" {
+		query.Set("startAfterId", opts.StartAfterID)
 	}
 
 	path := "/contacts/"

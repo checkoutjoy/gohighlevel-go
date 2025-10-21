@@ -1,3 +1,4 @@
+// Package gohighlevel provides a Go SDK for the GoHighLevel API with OAuth 2.0 authentication.
 package gohighlevel
 
 import (
@@ -33,10 +34,10 @@ type Client struct {
 	clientSecret string
 
 	// Access token management
-	accessToken      string
-	refreshToken     string
-	tokenExpiry      time.Time
-	tokenMutex       sync.RWMutex
+	accessToken  string
+	refreshToken string
+	tokenExpiry  time.Time
+	tokenMutex   sync.RWMutex
 
 	// Resources
 	Contacts *ContactsService
@@ -159,7 +160,9 @@ func (c *Client) fetchToken(data url.Values) error {
 	if err != nil {
 		return fmt.Errorf("failed to fetch token: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -228,7 +231,9 @@ func (c *Client) doRequest(method, path string, body interface{}, result interfa
 	if err != nil {
 		return fmt.Errorf("request failed: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
