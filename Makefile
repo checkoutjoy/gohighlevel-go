@@ -70,8 +70,18 @@ install-tools:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	@echo "Tools installed successfully"
 
-# Run example
-run-example:
+# Run examples
+run-example-simple:
+	@echo "Running simple token example..."
+	@echo "Make sure you have set: GHL_ACCESS_TOKEN, GHL_LOCATION_ID"
+	go run examples/simple_token/main.go
+
+run-example-refresh:
+	@echo "Running refresh token example..."
+	@echo "Make sure you have set: GHL_CLIENT_ID, GHL_CLIENT_SECRET, GHL_ACCESS_TOKEN, GHL_REFRESH_TOKEN, GHL_LOCATION_ID"
+	go run examples/refresh_token/main.go
+
+run-example-basic:
 	@echo "Running basic usage example..."
 	@echo "Make sure you have set the required environment variables"
-	go run examples/basic_usage.go
+	go run examples/basic/main.go

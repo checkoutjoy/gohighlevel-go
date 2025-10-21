@@ -51,14 +51,10 @@ type Config struct {
 	HTTPClient   *http.Client
 }
 
-// NewClient creates a new GoHighLevel API client
+// NewClient creates a new GoHighLevel API client.
+// ClientID and ClientSecret are optional - only required for OAuth flows and token refresh.
+// If you only need to make API calls with an existing access token, you can omit them.
 func NewClient(config Config) (*Client, error) {
-	if config.ClientID == "" {
-		return nil, fmt.Errorf("clientID is required")
-	}
-	if config.ClientSecret == "" {
-		return nil, fmt.Errorf("clientSecret is required")
-	}
 
 	baseURL := config.BaseURL
 	if baseURL == "" {
@@ -90,8 +86,12 @@ func NewClient(config Config) (*Client, error) {
 	return c, nil
 }
 
-// AuthorizeWithCode exchanges an authorization code for an access token
+// AuthorizeWithCode exchanges an authorization code for an access token.
+// Requires ClientID and ClientSecret to be set in the client config.
 func (c *Client) AuthorizeWithCode(code, redirectURI string) error {
+	if c.clientID == "" || c.clientSecret == "" {
+		return fmt.Errorf("clientID and clientSecret are required for OAuth authorization")
+	}
 	data := url.Values{}
 	data.Set("client_id", c.clientID)
 	data.Set("client_secret", c.clientSecret)
@@ -104,8 +104,12 @@ func (c *Client) AuthorizeWithCode(code, redirectURI string) error {
 	return c.fetchToken(data)
 }
 
-// AuthorizeWithRefreshToken refreshes the access token using a refresh token
+// AuthorizeWithRefreshToken refreshes the access token using a refresh token.
+// Requires ClientID and ClientSecret to be set in the client config.
 func (c *Client) AuthorizeWithRefreshToken(refreshToken string) error {
+	if c.clientID == "" || c.clientSecret == "" {
+		return fmt.Errorf("clientID and clientSecret are required for token refresh")
+	}
 	data := url.Values{}
 	data.Set("client_id", c.clientID)
 	data.Set("client_secret", c.clientSecret)

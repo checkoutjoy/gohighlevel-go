@@ -26,6 +26,10 @@ go get github.com/checkoutjoy/gohighlevel-go
 
 ## Quick Start
 
+### Simple Usage (With Access Token Only)
+
+If you already have an access token, you don't need to provide client credentials:
+
 ```go
 package main
 
@@ -37,23 +41,14 @@ import (
 )
 
 func main() {
-    // Create a new client
-    client, err := ghl.NewClient(ghl.Config{
-        ClientID:     "your-client-id",
-        ClientSecret: "your-client-secret",
-    })
+    // Create a client without OAuth credentials (simpler and more secure)
+    client, err := ghl.NewClient(ghl.Config{})
     if err != nil {
         log.Fatal(err)
     }
 
-    // Authorize with an OAuth code
-    err = client.AuthorizeWithCode("authorization-code", "redirect-uri")
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    // Or use an existing access token
-    // client.SetAccessToken("your-access-token")
+    // Just set your access token
+    client.SetAccessToken("your-access-token")
 
     // Create a contact
     contact, err := client.Contacts.Create(&ghl.CreateContactRequest{
@@ -74,9 +69,60 @@ func main() {
 
 ## Authentication
 
-The SDK supports OAuth 2.0 authentication with multiple authorization methods:
+The SDK supports OAuth 2.0 authentication with multiple authorization methods.
 
-### Method 1: Authorization Code Flow
+### Important: When Do You Need Client ID & Secret?
+
+**You DON'T need them if:**
+- You already have a valid access token
+- You manage token refresh externally
+- You're building a client-side application (they should NEVER be exposed client-side)
+
+**You DO need them if:**
+- You're implementing OAuth authorization code flow
+- You want the SDK to automatically refresh tokens using a refresh token
+- You're building a server-side application that handles OAuth
+
+### Security Best Practices
+
+⚠️ **Never expose client secrets in client-side code** (mobile apps, SPAs, browser extensions)
+✅ **Only use client secrets in secure server-side environments**
+✅ **If you only have access tokens, you can use the SDK without any client credentials**
+
+### Method 1: Simple - Using Just an Access Token (Recommended)
+
+Most secure for applications that already have tokens:
+
+```go
+// No client credentials needed!
+client, _ := ghl.NewClient(ghl.Config{})
+client.SetAccessToken("your-access-token")
+
+// Start making API calls immediately
+contact, err := client.Contacts.Get("contact-id")
+```
+
+### Method 2: With Token Refresh Capability
+
+If you need the SDK to refresh tokens automatically:
+
+```go
+// Provide client credentials for token refresh
+client, _ := ghl.NewClient(ghl.Config{
+    ClientID:     "your-client-id",
+    ClientSecret: "your-client-secret",
+})
+
+// Set initial tokens
+client.SetTokens("access-token", "refresh-token", 3600)
+
+// Later, refresh when needed
+err := client.AuthorizeWithRefreshToken(client.GetRefreshToken())
+```
+
+### Method 3: Full OAuth Authorization Code Flow
+
+For server-side apps implementing OAuth from scratch:
 
 ```go
 client, _ := ghl.NewClient(ghl.Config{
@@ -86,23 +132,6 @@ client, _ := ghl.NewClient(ghl.Config{
 
 // Exchange authorization code for access token
 err := client.AuthorizeWithCode("auth-code", "redirect-uri")
-```
-
-### Method 2: Existing Access Token
-
-```go
-client, _ := ghl.NewClient(ghl.Config{
-    ClientID:     "your-client-id",
-    ClientSecret: "your-client-secret",
-})
-
-client.SetAccessToken("your-access-token")
-```
-
-### Method 3: Refresh Token
-
-```go
-err := client.AuthorizeWithRefreshToken("refresh-token")
 ```
 
 ### Method 4: Manual Token Management
@@ -373,17 +402,36 @@ make fmt
 
 See the [examples](./examples) directory for complete working examples:
 
-- [basic_usage.go](./examples/basic_usage.go) - Comprehensive example covering all major operations
+### 1. Simple Usage (Access Token Only)
+[examples/simple_token](./examples/simple_token) - Use the SDK with just an access token (no client credentials needed)
 
-Run the example:
+```bash
+export GHL_ACCESS_TOKEN="your-access-token"
+export GHL_LOCATION_ID="your-location-id"
+go run examples/simple_token/main.go
+```
+
+### 2. With Token Refresh
+[examples/refresh_token](./examples/refresh_token) - Use the SDK with automatic token refresh capability
+
+```bash
+export GHL_CLIENT_ID="your-client-id"
+export GHL_CLIENT_SECRET="your-client-secret"
+export GHL_ACCESS_TOKEN="your-access-token"
+export GHL_REFRESH_TOKEN="your-refresh-token"
+export GHL_LOCATION_ID="your-location-id"
+go run examples/refresh_token/main.go
+```
+
+### 3. Full OAuth Flow
+[examples/basic](./examples/basic) - Comprehensive example covering all major operations including OAuth flow
 
 ```bash
 export GHL_CLIENT_ID="your-client-id"
 export GHL_CLIENT_SECRET="your-client-secret"
 export GHL_ACCESS_TOKEN="your-access-token"
 export GHL_LOCATION_ID="your-location-id"
-
-make run-example
+go run examples/basic/main.go
 ```
 
 ## API Documentation
