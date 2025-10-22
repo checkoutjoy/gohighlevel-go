@@ -376,6 +376,7 @@ func (c *Client) executeRequest(method, path string, body interface{}) (int, []b
 
 	req.Header.Set("Authorization", "Bearer "+token)
 	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Version", "2021-07-28")
 	if body != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}
