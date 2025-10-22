@@ -113,10 +113,15 @@ If you want the SDK to automatically refresh expired tokens and save them to you
 
 ```go
 // Define a callback to save tokens when they're refreshed
-func saveTokens(accessToken, refreshToken string, expiresIn int) {
+func saveTokens(tokenResp ghl.TokenResponse) {
     // Save to your database, Redis, file, etc.
-    db.SaveUserTokens(userID, accessToken, refreshToken, time.Now().Add(time.Duration(expiresIn)*time.Second))
-    log.Printf("Tokens automatically refreshed and saved (expires in %d seconds)", expiresIn)
+    // The TokenResponse includes all OAuth metadata
+    db.SaveUserTokens(userID, tokenResp.AccessToken, tokenResp.RefreshToken,
+        time.Now().Add(time.Duration(tokenResp.ExpiresIn)*time.Second))
+
+    // You also have access to additional metadata:
+    log.Printf("Tokens refreshed - UserType: %s, CompanyID: %s, UserID: %s",
+        tokenResp.UserType, tokenResp.CompanyID, tokenResp.UserID)
 }
 
 // Create client with automatic token refresh

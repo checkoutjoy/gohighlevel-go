@@ -21,9 +21,28 @@ const (
 	DefaultTimeout = 30 * time.Second
 )
 
+// TokenResponse represents the complete OAuth token response from GoHighLevel
+type TokenResponse struct {
+	AccessToken       string `json:"access_token"`
+	TokenType         string `json:"token_type"`
+	ExpiresIn         int    `json:"expires_in"`
+	RefreshToken      string `json:"refresh_token"`
+	Scope             string `json:"scope"`
+	RefreshTokenID    string `json:"refreshTokenId"`
+	UserType          string `json:"userType"`
+	CompanyID         string `json:"companyId"`
+	IsBulkInstall     bool   `json:"isBulkInstallation"`
+	UserID            string `json:"userId"`
+	LocationID        string `json:"locationId,omitempty"`        // Only present in some responses
+	AgencyID          string `json:"agencyId,omitempty"`          // Only present in some responses
+	PlanID            string `json:"planId,omitempty"`            // Only present in some responses
+	ApprovalRequestID string `json:"approvalRequestId,omitempty"` // Only present in some responses
+}
+
 // TokenRefreshCallback is called whenever tokens are automatically refreshed due to 401 errors.
 // This allows you to save the new tokens to your external storage (database, cache, etc.).
-type TokenRefreshCallback func(accessToken, refreshToken string, expiresIn int)
+// The callback receives the complete token response with all metadata.
+type TokenRefreshCallback func(tokenResponse TokenResponse)
 
 // Client is the main GoHighLevel API client
 type Client struct {
@@ -219,13 +238,7 @@ func (c *Client) refreshTokenInternal(refreshToken string) error {
 		return fmt.Errorf("token request failed with status %d: %s", resp.StatusCode, string(body))
 	}
 
-	var tokenResp struct {
-		AccessToken  string `json:"access_token"`
-		RefreshToken string `json:"refresh_token"`
-		TokenType    string `json:"token_type"`
-		ExpiresIn    int    `json:"expires_in"`
-		Scope        string `json:"scope"`
-	}
+	var tokenResp TokenResponse
 
 	if err := json.Unmarshal(body, &tokenResp); err != nil {
 		return fmt.Errorf("failed to parse token response: %w", err)
@@ -242,7 +255,7 @@ func (c *Client) refreshTokenInternal(refreshToken string) error {
 
 	// Call the callback if set (this is automatic refresh, so always call it)
 	if c.onTokenRefresh != nil {
-		c.onTokenRefresh(tokenResp.AccessToken, tokenResp.RefreshToken, tokenResp.ExpiresIn)
+		c.onTokenRefresh(tokenResp)
 	}
 
 	return nil
@@ -274,13 +287,7 @@ func (c *Client) fetchToken(data url.Values) error {
 		return fmt.Errorf("token request failed with status %d: %s", resp.StatusCode, string(body))
 	}
 
-	var tokenResp struct {
-		AccessToken  string `json:"access_token"`
-		RefreshToken string `json:"refresh_token"`
-		TokenType    string `json:"token_type"`
-		ExpiresIn    int    `json:"expires_in"`
-		Scope        string `json:"scope"`
-	}
+	var tokenResp TokenResponse
 
 	if err := json.Unmarshal(body, &tokenResp); err != nil {
 		return fmt.Errorf("failed to parse token response: %w", err)
