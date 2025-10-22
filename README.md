@@ -95,32 +95,77 @@ Most secure for applications that already have tokens:
 
 ```go
 // No client credentials needed!
-client, _ := ghl.NewClient(ghl.Config{})
-client.SetAccessToken("your-access-token")
+client, _ := ghl.NewClient(ghl.Config{
+    AccessToken: "your-access-token",
+    LocationID:  "your-location-id", // Optional: set default location ID
+})
 
 // Start making API calls immediately
 contact, err := client.Contacts.Get("contact-id")
+
+// Or set location ID dynamically
+client.SetLocationID("your-location-id")
 ```
 
-### Method 2: With Token Refresh Capability
+### Method 2: With Automatic Token Refresh (Recommended for Server-Side)
 
-If you need the SDK to refresh tokens automatically:
+If you want the SDK to automatically refresh expired tokens and save them to your storage:
 
 ```go
-// Provide client credentials for token refresh
+// Define a callback to save tokens when they're refreshed
+func saveTokens(accessToken, refreshToken string, expiresIn int) {
+    // Save to your database, Redis, file, etc.
+    db.SaveUserTokens(userID, accessToken, refreshToken, time.Now().Add(time.Duration(expiresIn)*time.Second))
+    log.Printf("Tokens automatically refreshed and saved (expires in %d seconds)", expiresIn)
+}
+
+// Create client with automatic token refresh
+client, _ := ghl.NewClient(ghl.Config{
+    ClientID:         "your-client-id",
+    ClientSecret:     "your-client-secret",
+    AccessToken:      "your-access-token",
+    RefreshToken:     "your-refresh-token",
+    LocationID:       "your-location-id",
+    OnTokenRefresh:   saveTokens,        // Callback to save new tokens
+    AutoRefreshOn401: true,              // Enable automatic refresh on 401 errors
+})
+
+// Now use the client normally - it handles token expiration automatically!
+contact, err := client.Contacts.Get("contact-id")
+// If token expires:
+// 1. SDK detects 401 error
+// 2. Automatically refreshes using refresh token
+// 3. Calls saveTokens() with new tokens
+// 4. Retries the request
+// 5. Returns the result seamlessly
+```
+
+### Method 3: Manual Token Refresh
+
+If you prefer manual control over token refresh:
+
+```go
 client, _ := ghl.NewClient(ghl.Config{
     ClientID:     "your-client-id",
     ClientSecret: "your-client-secret",
+    AccessToken:  "your-access-token",
+    RefreshToken: "your-refresh-token",
 })
 
-// Set initial tokens
-client.SetTokens("access-token", "refresh-token", 3600)
-
-// Later, refresh when needed
+// Manually refresh when needed
 err := client.AuthorizeWithRefreshToken(client.GetRefreshToken())
+if err == nil {
+    // Save the new tokens
+    newAccessToken := client.GetAccessToken()
+    newRefreshToken := client.GetRefreshToken()
+    // Save to your storage
+}
+
+// Or set tokens dynamically
+client.SetTokens("access-token", "refresh-token", 3600)
 ```
 
-### Method 3: Full OAuth Authorization Code Flow
+### Method 4: Full OAuth Authorization Code Flow
 
 For server-side apps implementing OAuth from scratch:
 
@@ -132,21 +177,6 @@ client, _ := ghl.NewClient(ghl.Config{
 
 // Exchange authorization code for access token
 err := client.AuthorizeWithCode("auth-code", "redirect-uri")
-```
-
-### Method 4: Manual Token Management
-
-```go
-// Set tokens with expiry
-client.SetTokens(
-    "access-token",
-    "refresh-token",
-    3600, // expires in seconds
-)
-
-// Retrieve current tokens
-accessToken := client.GetAccessToken()
-refreshToken := client.GetRefreshToken()
 ```
 
 ## Resources
@@ -456,8 +486,47 @@ if err != nil {
 }
 ```
 
-Common error scenarios:
+### Automatic Token Refresh on 401 Errors
+
+When `AutoRefreshOn401` is enabled, the SDK automatically handles token expiration:
+
+```go
+client, _ := ghl.NewClient(ghl.Config{
+    ClientID:         "your-client-id",
+    ClientSecret:     "your-client-secret",
+    AccessToken:      "your-access-token",
+    RefreshToken:     "your-refresh-token",
+    OnTokenRefresh:   saveTokensFunc,
+    AutoRefreshOn401: true,
+})
+
+// This request may trigger automatic token refresh if token is expired
+contact, err := client.Contacts.Get("contact-id")
+if err != nil {
+    // Error here means either:
+    // 1. Refresh token is also expired (need to re-authenticate)
+    // 2. Other API error (not 401)
+    // 3. Network error
+    log.Printf("Failed: %v", err)
+}
+```
+
+**How it works:**
+1. API request returns 401 Unauthorized
+2. SDK automatically calls refresh token endpoint
+3. New tokens are saved via `OnTokenRefresh` callback
+4. Original request is retried with new token
+5. Result is returned (or error if refresh failed)
+
+**When automatic refresh is NOT attempted:**
+- `AutoRefreshOn401` is false (default)
+- No refresh token available
+- No client credentials configured
+- Already attempted refresh once (prevents infinite loops)
+
+### Common error scenarios:
 - Missing or invalid access token
+- Token expired (auto-refreshed if enabled, otherwise returns 401 error)
 - Invalid request parameters
 - API rate limiting
 - Network errors

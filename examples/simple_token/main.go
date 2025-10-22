@@ -11,18 +11,19 @@ import (
 // This example shows how to use the SDK when you already have an access token.
 // You don't need to provide client ID or secret for basic API operations.
 func main() {
-	// Create a client without OAuth credentials (simpler and more secure)
-	client, err := ghl.NewClient(ghl.Config{})
-	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
-	}
-
-	// Just set your access token
+	// Get access token from environment
 	accessToken := os.Getenv("GHL_ACCESS_TOKEN")
 	if accessToken == "" {
 		log.Fatal("GHL_ACCESS_TOKEN environment variable is required")
 	}
-	client.SetAccessToken(accessToken)
+
+	// Create a client with just the access token (simpler and more secure)
+	client, err := ghl.NewClient(ghl.Config{
+		AccessToken: accessToken,
+	})
+	if err != nil {
+		log.Fatalf("Failed to create client: %v", err)
+	}
 
 	// Get location ID from environment
 	locationID := os.Getenv("GHL_LOCATION_ID")
