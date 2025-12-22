@@ -34,7 +34,7 @@ type Contact struct {
 	DateOfBirth          string             `json:"dateOfBirth,omitempty"`
 	DateAdded            time.Time          `json:"dateAdded,omitempty"`
 	DateUpdated          time.Time          `json:"dateUpdated,omitempty"`
-	CustomFields         []CustomField      `json:"customField,omitempty"`
+	CustomFields         []CustomField      `json:"customFields,omitempty"`
 	BusinessID           string             `json:"businessId,omitempty"`
 	AttributionSource    *AttributionSource `json:"attributionSource,omitempty"`
 	AdditionalEmails     []string           `json:"additionalEmails,omitempty"`
@@ -113,7 +113,7 @@ type CreateContactRequest struct {
 	Website           string             `json:"website,omitempty"`
 	Source            string             `json:"source,omitempty"`
 	Tags              []string           `json:"tags,omitempty"`
-	CustomFields      []CustomField      `json:"customField,omitempty"`
+	CustomFields      []CustomField      `json:"customFields,omitempty"`
 	AttributionSource *AttributionSource `json:"attributionSource,omitempty"`
 }
 
@@ -133,7 +133,7 @@ type UpdateContactRequest struct {
 	Website           string             `json:"website,omitempty"`
 	Source            string             `json:"source,omitempty"`
 	Tags              []string           `json:"tags,omitempty"`
-	CustomFields      []CustomField      `json:"customField,omitempty"`
+	CustomFields      []CustomField      `json:"customFields,omitempty"`
 	AttributionSource *AttributionSource `json:"attributionSource,omitempty"`
 }
 
@@ -154,7 +154,7 @@ type UpsertContactRequest struct {
 	Website           string             `json:"website,omitempty"`
 	Source            string             `json:"source,omitempty"`
 	Tags              []string           `json:"tags,omitempty"`
-	CustomFields      []CustomField      `json:"customField,omitempty"`
+	CustomFields      []CustomField      `json:"customFields,omitempty"`
 	AttributionSource *AttributionSource `json:"attributionSource,omitempty"`
 }
 
